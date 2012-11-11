@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Iconverl by edescourtis</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Iconverl</h1>
+        <h2>Erlang libiconv binding (This one is a pure function with no side effects and is actively maintained)</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/edescourtis/iconverl/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/edescourtis/iconverl/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/edescourtis/iconverl" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <pre>
+   ┌─────────────────────────────────────────────────────────────┐
+   │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+   │▓                                                           ▓│
+   │▓  ██  ██▀▀██  ██▀██  ███ ██ ██    ██ ██████ ██▀▀██ ██      ▓│
+   │▓  ██ ██    ▀ ██   ██ ██████  ██  ██  ██▄▄   ██▄▄██ ██      ▓│
+   │▓  ██ ██      ██   ██ ██ ███   ████   ██▀▀   ██▀██  ██   ▄  ▓│
+   │▓  ██  ██▄▄██  ██▄██  ██  ██    ██    ██████ ██  ██ ██▄▄██  ▓│
+   │▓                                                           ▓│
+   │▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│
+   └─────────────────────────────────────────────────────────────┘
+</pre>
+
+<h1>About</h1>
+
+<p>I needed access to iconv from glibc. After trying the very buggy erlang-iconv (it segfaults). I tried iconverl it seemed to work great, until we (my colleague and I) ran into some problems where it would sometimes return {error, eilseq} instead of the result for the same input (one that was previously successful). </p>
+
+<p>This prompted me to write a replacement. I tried to get it pulled by the original author since it implements an almost identical interface. But he decided that there was no bug since he couldn't reproduce it on his system!? This has now occured on two completely different environments (Ubuntu 12.04 LTS 64bit and Gentoo). </p>
+
+<p>So if you are like me and don't like to have your super fault-tolerant production systems running buggy code you'll run this module and not the other two alternatives.</p>
+
+<h1>Compilation</h1>
+
+<pre>
+make
+</pre>
+
+<h1>Usage</h1>
+
+<pre>
+1&gt; CD = iconverl:open("ucs-2be", "utf-8").
+{cd, "ucs-2be", "utf-8"};
+2&gt; iconverl:conv(CD, &lt;&lt;"text"&gt;&gt;).
+{ok,&lt;&lt;0,116,0,101,0,120,0,116&gt;&gt;}
+3&gt; iconverl:conv(CD, &lt;&lt;"more text to convert"&gt;&gt;).
+{ok,&lt;&lt;0,109,0,111,0,114,0,101,0,32,0,116,0,101,0,120,0,
+      116,0,32,0,116,0,111,0,32,0,...&gt;&gt;}
+4&gt; iconverl:conv("ucs-4", "latin1", 
+   &lt;&lt;"convert with a single function call"&gt;&gt;).
+{ok,&lt;&lt;0,0,0,99,0,0,0,111,0,0,0,110,0,0,0,118,0,0,0,101,0,
+      0,0,114,0,0,0,...&gt;&gt;}
+</pre>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
